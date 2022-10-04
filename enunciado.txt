@@ -1,0 +1,8 @@
+Administración de pedidos
+En una empresa se realizan pedidos de compra a los proveedores con los
+cuales trabaja, los cuales son identificados con la siguiente información: razón
+social, CUIT, Condición de IVA, domicilio (calle, nro, dpto., piso), localidad,
+teléfono y fax.
+Cada pedido puede solicitar uno o más artículos y se le realiza a un solo
+proveedor, esto servirá para reponer el stock; de cada artículo se debe
+conocer el nombre, descripción, unidad de medida y precio unitario.

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Pedido</title>
+</head>
+<body>
+    <!-- <a href="">articulos</a> -->
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
+    <h4 style="color: green;" for="">{{ message }}</h4>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <div id="proveedores">
+        {%for proveedor in proveedores%}
+        {{proveedor[0]}} <br>
+        <div id="pedidos">
+            <div id="dataContent{{proveedor[8]}}">
+
+            </div>
+            <button onclick="document.getElementById('formPedido{{proveedor[8]}}').style='display: block;'">Nuevo pedido </button>
+            <button onclick="getPedidosByProveedor({{proveedor[8]}})" id="PAnt{{proveedor[8]}}"> Ver pedidos anteriores</button>
+            <section id="new_pedido" >
+                <div id="detallePedido">
+                <form id="formPedido{{proveedor[8]}}"  style="display: none;" onsubmit="registrarPedido({{proveedor[8]}})"  target="_blank">
+                    <br>
+                    <button type="button" onclick="addArt({{proveedor[8]}})"> add art</button>
+                    <button type="submit" form="formPedido{{proveedor[8]}}" >  Continuar</button>
+                    <br>
+                        
+                        <select name="" id="" form="formPedido{{proveedor[8]}}"  oninput="artSelected(this,'CantArt{{proveedor[8]}}','PrecioUnitario{{proveedor[8]}}' ,'SubTotalArt{{proveedor[8]}}')" required >
+                            <option value=""></option>
+                            {% for article in articles %}
+                            <option value="">
+                                {{article[0]}}
+                            </option>
+                            {% endfor%}
+                        </select>
+                        <input type="number" name="" form="formPedido{{proveedor[8]}}" id="CantArt{{proveedor[8]}}" placeholder="cantidad" onchange="calculateSubTotal('CantArt{{proveedor[8]}}','PrecioUnitario{{proveedor[8]}}', 'SubTotalArt{{proveedor[8]}}')" required>
+                        <input type="number" name="" form="formPedido{{proveedor[8]}}" id="SubTotalArt{{proveedor[8]}}" placeholder="subtotal" readonly required>
+                        <input type="number" name="" form="formPedido{{proveedor[8]}}" id="PrecioUnitario{{proveedor[8]}}" placeholder="Precio Unitario" value="" required readonly>        
+                        <br>
+                    </form>
+                
+                </div>
+            </section>
+            
+    </div>     
+        
+        
+        {%endfor %}
+      
+    </div>
+ 
+   
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+        
+        function registrarPedido(idproveedor){
+            alert("the function is called")
+            let form={}    
+
+            
+            for (let name of document.getElementById("formPedido"+idproveedor).children ) {
+                if(name.options){
+                    art=name.options[name.selectedIndex].text
+                    form[art]={}
+                }
+                if (name.value){
+                    nombre=(name.getAttribute("placeholder"))
+                    value=name.value
+                    form[art][nombre]=value
+                }
+            }
+            window.location.href=`/registrarPedido/${JSON.stringify(form)}${idproveedor}`   
+        }
+        function getPedidosByProveedor(idproveedor){
+            url=`/pedidos/${idproveedor}`
+            $.get(url,function(data,status){
+            
+                let datajson=JSON.parse(data)
+                htmlcontent=``
+                for (let pedido of datajson){
+                    console.log(pedido)
+                    htmlcontent+= pedido + "<br>"
+                }
+                document.getElementById("dataContent"+idproveedor).insertAdjacentHTML("beforebegin", ("<br>"+htmlcontent  ))
+
+            })
+            document.getElementById("PAnt"+idproveedor).style="display: none"
+        }
+        
+        function artSelected(sel,CantArtN, precioUnitarioN, ST) {
+            
+            let price=0
+            //get selected option
+            const selected=sel.options[sel.selectedIndex].text;
+            
+            // get  articles in  neat way
+            var articleslist = JSON.parse('{{ articles | tojson }}');
+            //get price from selected article 
+            for(let art of articleslist){
+                if(art[0]==selected){
+                    price=art[3]
+                    
+                }
+            }     
+            //change value segun selected article
+            
+            document.getElementById(precioUnitarioN).setAttribute("value",price)
+            calculateSubTotal(CantArtN,precioUnitarioN,ST)
+        }
+        
+        function calculateSubTotal(CantArt,PUArt,ST){
+            CAN=document.getElementById(CantArt).value
+            PUAN=document.getElementById(PUArt).value
+            document.getElementById(ST).value=CAN*PUAN
+        }
+        let added=0
+        function addArt(idproveedor){
+            //asing class to work 
+            added++
+            idCant="CantArt"+added+idproveedor
+            idPU="PrecioUnitario"+added+idproveedor
+            idST="SubTotalArt"+added +idproveedor
+            htmlcontent=`
+            <select name="" id="" required oninput="artSelected(this,'${idCant}','${idPU}','${idST}')"
+                <option value=""> </option>
+                <option value=""> </option> 
+                {% for article in articles %}
+                    <option value=""> {{article[0]}} </option>
+                {% endfor%}
+            </select> 
+            <input type="number" name="" id="${idCant}" placeholder="cantidad" required onchange="calculateSubTotal('${idCant}','${idPU}','${idST}') ">
+            <input type="number" name="" id="${idST}" placeholder="subtotal"  readonly required> 
+            <input type="number" name="" id="${idPU}" placeholder="Precio Unitario" value="" required readonly> <br>
+            `
+            document.getElementById("formPedido"+idproveedor).insertAdjacentHTML("beforeend",htmlcontent )
+        }
+
+    </script>
+</body>
+</html>
