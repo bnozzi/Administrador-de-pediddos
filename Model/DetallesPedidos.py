@@ -14,7 +14,7 @@ class DetallePedido:
 
     def mostrar(self, ):
 
-        return f"Articulo: {self.artículo.nombre}, cantidad: {self.cantidad} , subtotal: {self.subtotal} , Precio Unitario: {self.precioUnitario}"
+        return f"\n'Articulo': '{self.artículo.nombre}', 'cantidad': {self.cantidad} , 'subtotal': {self.subtotal} , 'Precio Unitario': {self.precioUnitario}"
     
     def setidpedido(value):
         self.idpedido = value

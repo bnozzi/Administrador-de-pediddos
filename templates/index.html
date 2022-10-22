@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrar Pedido</title>
+    
 </head>
 <body>
     <!-- <a href="">articulos</a> -->
@@ -82,15 +83,14 @@
         function getPedidosByProveedor(idproveedor){
             url=`/pedidos/${idproveedor}`
             $.get(url,function(data,status){
-            
+                console.log(data)
+                let htmlcontent=``
                 let datajson=JSON.parse(data)
-                htmlcontent=``
-                for (let pedido of datajson){
-                    console.log(pedido)
-                    htmlcontent+= pedido + "<br>"
+                for (let keys in datajson){
+                    htmlcontent+=datajson[keys]
                 }
                 document.getElementById("dataContent"+idproveedor).insertAdjacentHTML("beforebegin", ("<br>"+htmlcontent  ))
-
+                console.log(JSON.parse({htmlcontent}))
             })
             document.getElementById("PAnt"+idproveedor).style="display: none"
         }

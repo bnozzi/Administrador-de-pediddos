@@ -7,8 +7,8 @@ from datetime import datetime
 
 
 class Pedido:
-    def __init__(self, detalle,idProveedor):
-        self.idPedido=None
+    def __init__(self,idPedido=None, detalle=None,idProveedor=None):
+        self.idPedido=idPedido
         self.fecha = datetime.now().date()
         self.hora = str(datetime.now().hour) + ":"+ str(datetime.now().minute) + ":"+ str(datetime.now().second)
         self.númeroDePedido = detalle # detalle pedido lista de detalles 
@@ -25,9 +25,9 @@ class Pedido:
         detalles=""
         for detalle in self.númeroDePedido:
             detalles+="\n" +detalle.mostrar()
-        return f"\nFecha: {self.fecha} , hora: {self.hora} \nDetalle: {detalles} , total: {self.total}"
-    def setidPedido(value):
-        self.idPedido=value      
+        return f"Fecha: '{self.fecha}' , hora: '{self.hora}' , Detalle: '{detalles}' total: {self.total}"
+    
+
     def conocerArtículo(self, ):
         pass
 
@@ -36,6 +36,8 @@ class Pedido:
         for detalle in self.númeroDePedido:
             self.total+=detalle.subtotal
         
+    def setidpedido(self,id):
+        self.idPedido=id
 
     def conocerDetallePedido(self, ):
         pass

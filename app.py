@@ -7,6 +7,8 @@ import json
 from flask import Flask, render_template,redirect, url_for, flash,jsonify
 app= Flask(__name__)
 app.secret_key="dev"
+app.config["DEBUG"] = True
+
 @app.route("/")
 def index():
     proveedores=getProveedores()       
@@ -40,7 +42,7 @@ def registrarPedido(datosForm,idproveedor):
     #!!!
     pedido=Pedidos.Pedido(detalles,idproveedor)
     pedido.calcularTotal()
-
+    
     registrarPedidoInDB(pedido)
     return  redirect(url_for("index",msg=flash("Pedido registrado con exito :D")))
     
@@ -83,14 +85,16 @@ def getPedidosByProveedor(idProveedor):
         return lista
     #ver si toma los detalles segun el pedido segun el proveedor 
     for pedido in pedidos:
-        objPedidos.append(Pedido(filtrar(pedido[0],objDetalle),idProveedor))
+        objPedidos.append(Pedido(pedido[0],filtrar(pedido[0],objDetalle),idProveedor))
     respuesta=[]
+    respuestaDict={}
     for obj in objPedidos :
         obj.calcularTotal()
         respuesta.append(obj.mostrar())
+        respuestaDict[obj.idPedido]=    (obj.mostrar())
 
-
-    return  json.dumps(respuesta, indent=4, sort_keys=True, default=str)
+    print(respuestaDict)
+    return  json.dumps(respuestaDict, indent=4, sort_keys=True, default=str)
     
     
 

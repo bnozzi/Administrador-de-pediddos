@@ -1,7 +1,7 @@
 #db
 import mysql.connector
 def dbConect():
-    conn=mysql.connector.connect( host='localhost', user= 'root', passwd='Znid3e5f', db='administrar_pedidos' )
+    conn=mysql.connector.connect( host='localhost', user= 'root', passwd='znid3e5f', db='administrar_pedidos' )
     return conn
 
 #guardar en las respectivas tablas el pedido y sus detalles pasando un objeto pedido como parametro 
@@ -79,4 +79,4 @@ def getArticle_id(idArticle):
     conection.close()
     return article
 
-print (getArticle_id(1))
+print (getPedidos_Proveedor(1))
