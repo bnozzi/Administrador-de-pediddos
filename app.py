@@ -4,7 +4,7 @@ from Model.DetallesPedidos import DetallePedido
 from Model.Pedidos import Pedido
 from db import *
 import json
-from flask import Flask, render_template,redirect, url_for, flash,jsonify
+from flask import Flask, render_template,redirect, url_for, flash,jsonify, request
 app= Flask(__name__)
 app.secret_key="dev"
 app.config["DEBUG"] = True
@@ -16,39 +16,32 @@ def index():
     return render_template("index.html", proveedores=proveedores, articles=articles) 
 
 
-
-@app.route("/registrarPedido/<datosForm><idproveedor>",methods=("GET","POST"))
-def registrarPedido(datosForm,idproveedor):
-    #info=json.loads(datosForm)
-    
-    info=json.loads(datosForm)
-    print (info)
-
+@app.route("/registrarNuevoPedido/<idproveedor>",methods=["GET","POST"])
+def registrarNuevoPedido(idproveedor):
+    list=[]
     detalles=[]
-    for article in info:
-        #GET idArticle from db 
-        conection=dbConect()
-        con=conection.cursor()
-        con.execute(f"select idArticulo FROM Articulo WHERE Nombre='{article}' ;")
-        #Instancio el objeto detalle de Pedido segun los articulos que haya en el diccionario y los guardo en una lista  
-        detalles.append(DetallesPedidos.DetallePedido(Artículos.Artículo(con.fetchone()[0],article,info[article]["Precio Unitario"]),info[article]["cantidad"],info[article]["Precio Unitario"]))   
-        conection.close()
-    #calculo el subtotal de cada articulo
+    def dictToList(dict):
+        for key in dict:
+            list.append(dict[key])
+                
+    if request.method == "POST":
+        form=json.dumps(request.form)
+        dictform=json.loads(form)
+    dictToList(dictform)
+    for value in range(0,len(list),4):
+            print(list[value])
+            detalles.append(DetallesPedidos.DetallePedido(Artículos.Artículo(getIdArticleByName(list[value]),list[value],list[value+3]),list[value+1],list[value+3]))
     for detalle in detalles:
         detalle.calcularSubtotal()
-        print("here", detalle.mostrar())
+        print (detalle.mostrar())
 
-
-    #!!!
-    
     pedido=Pedido(detalle=detalles,idProveedor=idproveedor)
-    print(pedido.númeroDePedido)
     pedido.calcularTotal()
     
     registrarPedidoInDB(pedido)
-    return  redirect(url_for("index",msg=flash("Pedido registrado con exito :D")))
+    return  redirect(url_for("index",msg=flash("Pedido registrado con exito :D")))   
+
     
-    #recibir el formulario y guardar en bd
 #obtener los los detalles de los pedidos y devolverlo como json 
 @app.route("/pedidos/<idProveedor>",methods=["GET","POST"])
 def getPedidosByProveedor(idProveedor):
@@ -99,6 +92,15 @@ def getPedidosByProveedor(idProveedor):
     return  json.dumps(respuestaDict, indent=4, sort_keys=True, default=str)
     
     
+@app.route("/nuevoProveedor", methods=["POST"])
+def nuevoProveedor():
+
+        if request.method == "POST":
+            form=json.dumps(request.form)
+            dictform=json.loads(form)
+
+            registrarProveedor(dictform["Razon social"], dictform["CUIL"], dictform["COND IVA"], dictform["provincia"], dictform["Localidad"], dictform["numero"], dictform["fax"])
+            return  redirect(url_for("index",msg=flash("proveedor registrado con exito")))
 
 
 

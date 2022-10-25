@@ -48,7 +48,7 @@ def getPedidos():
     pedidos=con.fetchall()
     conection.close()
     return pedidos
-def getdetallePedido():
+def getdetallePedido(): 
     conection=dbConect()
     con=conection.cursor()
     con.execute("select * from detallePedido")
@@ -81,6 +81,20 @@ def getArticle_id(idArticle):
     conection.close()
     return article
 
-print (getArticles(),
-getProveedores())
+def registrarProveedor(Rs,CUIT,condIva,domicilio,localidad,telefono,fax):
+    conection=dbConect()
+    con=conection.cursor()
+    con.execute(f"INSERT INTO proveedores(razonSocial, CUIT, CondIVA, domicilio, localidad, telefono, fax) VALUES ('{Rs}','{CUIT}','{condIva}','{domicilio}','{localidad}','{telefono}','{fax}') ")
+    conection.commit()
+    conection.close()
+    
+def getIdArticleByName(name):
+        conection=dbConect()
+        con=conection.cursor()
+        con.execute(f"select idArticulo FROM Articulo WHERE Nombre='{name}' ;")
+        articleID=con.fetchone()[0]
+        return articleID
+print(getIdArticleByName("Yerba Mate") )   
+    
 
+    
