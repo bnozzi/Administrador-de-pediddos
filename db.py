@@ -1,7 +1,9 @@
 #db
 import mysql.connector
+#change localhost database for same database hosted in 000webhost
+
 def dbConect():
-    conn=mysql.connector.connect( host='localhost', user= 'root', passwd='znid3e5f', db='administrar_pedidos' )
+    conn=mysql.connector.connect( host='sql.freedb.tech', user= 'freedb_pizzi686', passwd='Nnu9UPx9Xf7j$Nq', db='freedb_adm-pedidos' )
     return conn
 
 #guardar en las respectivas tablas el pedido y sus detalles pasando un objeto pedido como parametro 
@@ -79,4 +81,6 @@ def getArticle_id(idArticle):
     conection.close()
     return article
 
-print (getPedidos_Proveedor(1))
+print (getArticles(),
+getProveedores())
+

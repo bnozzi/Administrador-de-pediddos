@@ -36,11 +36,13 @@ def registrarPedido(datosForm,idproveedor):
     #calculo el subtotal de cada articulo
     for detalle in detalles:
         detalle.calcularSubtotal()
-     #   print(detalle.mostrar())
+        print("here", detalle.mostrar())
 
 
     #!!!
-    pedido=Pedidos.Pedido(detalles,idproveedor)
+    
+    pedido=Pedido(detalle=detalles,idProveedor=idproveedor)
+    print(pedido.númeroDePedido)
     pedido.calcularTotal()
     
     registrarPedidoInDB(pedido)
@@ -85,7 +87,7 @@ def getPedidosByProveedor(idProveedor):
         return lista
     #ver si toma los detalles segun el pedido segun el proveedor 
     for pedido in pedidos:
-        objPedidos.append(Pedido(pedido[0],filtrar(pedido[0],objDetalle),idProveedor))
+        objPedidos.append(Pedido(pedido[0],filtrar(pedido[0],objDetalle),idProveedor,pedido[2],pedido[3]))
     respuesta=[]
     respuestaDict={}
     for obj in objPedidos :

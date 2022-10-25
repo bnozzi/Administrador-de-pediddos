@@ -7,10 +7,10 @@ from datetime import datetime
 
 
 class Pedido:
-    def __init__(self,idPedido=None, detalle=None,idProveedor=None):
+    def __init__(self,idPedido=None, detalle=None,idProveedor=None, fecha=datetime.now().date(), hora=str(datetime.now().hour) + ":"+ str(datetime.now().minute) + ":"+ str(datetime.now().second)):
         self.idPedido=idPedido
-        self.fecha = datetime.now().date()
-        self.hora = str(datetime.now().hour) + ":"+ str(datetime.now().minute) + ":"+ str(datetime.now().second)
+        self.fecha = fecha
+        self.hora = hora
         self.númeroDePedido = detalle # detalle pedido lista de detalles 
         self.total=None
         self.proveedor = idProveedor
@@ -34,8 +34,10 @@ class Pedido:
     def calcularTotal(self, ):
         self.total=0
         for detalle in self.númeroDePedido:
-            self.total+=detalle.subtotal
-        
+            self.total+=int(detalle.subtotal)
+    def getnumeroDePedido(self,):
+        return (self.númeroDePedido)
+
     def setidpedido(self,id):
         self.idPedido=id
 
@@ -44,12 +46,17 @@ class Pedido:
 # print (datetime.now().date())
 #CP
 '''
-artículo1=Artículo("Azucar", 150)
-artículo2=Artículo("Yerba Mate", 350)
+from Artículos import Artículo
+from DetallesPedidos import DetallePedido
+artículo1=Artículo(1,"Azucar", 150)
+artículo2=Artículo(2,"Yerba Mate", 350)
 
+detalle1=DetallePedido(artículo1,1,artículo1.precioUnitario)
+detalle2=DetallePedido(artículo2,1,artículo2.precioUnitario)
+detalle1.calcularSubtotal()
+detalle2.calcularSubtotal()
+Pedido1=Pedido(detalle=[detalle1,detalle2])
 
-detalle=DetallePedido([artículo1,artículo2],[1,1],[150,350],[artículo1.precioUnitario,artículo2.precioUnitario])
-Pedido1=Pedido(detalle)
-
+Pedido1.calcularTotal()
 print(Pedido1.mostrar())
 '''

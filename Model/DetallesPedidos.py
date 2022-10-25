@@ -4,7 +4,7 @@
 class DetallePedido:
     
     def __init__(self,art,cant, pu,idpedido=None):
-        self.artículo = art
+        self.artículo = art #one object 
         self.cantidad = cant
         self.subtotal = None
         self.precioUnitario = pu
@@ -20,7 +20,7 @@ class DetallePedido:
         self.idpedido = value
     
     def calcularSubtotal(self, ):
-        #SubTotal=0
+        SubTotal=0
         SubTotal=(int(self.artículo.precioUnitario)*int(self.cantidad))
         self.subtotal=SubTotal
 
@@ -30,11 +30,13 @@ class DetallePedido:
 
 #casos de prueba
 '''
-artículo1=Artículo("Azucar", 150)
-artículo2=Artículo("Yerba Mate", 350)
+from Artículos import Artículo
+
+artículo1=Artículo(1,"Azucar", 150)
+artículo2=Artículo(2,"Yerba Mate", 350)
 
 
-detalle=DetallePedido([artículo1,artículo2],[3,1],[artículo1.precioUnitario,artículo2.precioUnitario])
-print(detalle.mostrar())
-print (detalle.calcularSubtotal())
+detalle1=DetallePedido(artículo1,1,artículo1.precioUnitario)
+detalle1.calcularSubtotal()
+print (detalle1.mostrar())
 '''
